@@ -6,36 +6,38 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import { connect } from 'react-redux';
 import './App.css';
 
-import { setSearchField } from '../actions';
+import { setSearchField, getRobots } from '../actions';
 
-const mapStateToProps = state => ({
-    searchField: state.searchField
-});
+const mapStateToProps = state => {
+
+    const { robots, error, isPending } = state.fetchRobots;
+    const { searchField } = state.searchRobots;
+    return {
+        searchField, robots, error, isPending
+    }
+};
 
 const mapDispatchToProps = dispatch => ({
     onSearchChange: (event) => {
         dispatch(setSearchField(event.target.value));
-    }
+    },
+    getRobots: () => dispatch(getRobots())
 })
 
 class App extends React.Component {
 
-    constructor() {
-        super();
-        this.state = {
-            robots: [],
-        }
-    }
-
     render() {
 
-        const {searchField, onSearchChange} = this.props;
+        const { robots, error, isPending, searchField, onSearchChange } = this.props;
 
-        const filteredRobots = this.state.robots.filter(robot => robot.name.toLowerCase().includes(searchField.toLowerCase()));
-        
-        if (filteredRobots.length === 0) {
+        const filteredRobots = robots.filter(robot => robot.name.toLowerCase().includes(searchField.toLowerCase()));
+
+        if (isPending) {
             return <h1>LOADING</h1>
-        } else {
+        } else if (error) {
+            return <h1>Failed to fetch the Robots</h1>
+        }
+        else {
             return (
                 <div className="tc">
                     <h1 className="f1">RoboFriends</h1>
@@ -51,9 +53,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        fetch('https://jsonplaceholder.typicode.com/users')
-            .then(response => response.json())
-            .then(users => this.setState({ robots: users }));
+        this.props.getRobots();
     }
 }
 
