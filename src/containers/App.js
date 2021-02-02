@@ -1,58 +1,95 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import CardList from '../components/CardList';
 import SearchBox from '../components/SearchBox';
 import Scroll from '../components/Scroll';
 import ErrorBoundary from '../components/ErrorBoundary';
+import { connect } from 'react-redux';
 import './App.css';
 
-const App = () => {
+import { setSearchField } from '../actions';
 
-    // constructor() {
-    //     super();
-    //     this.state = {
-    //         robots: [],
-    //         searchField: ''
-    //     }
-    // }
+const mapStateToProps = state => ({
+    searchField: state.searchField
+});
 
-    const [robots, setRobots] = useState([]);
-    const [searchField, setSearchField] = useState('');
+const mapDispatchToProps = dispatch => ({
+    onSearchChange: (event) => {
+        dispatch(setSearchField(event.target.value));
+    }
+})
 
-    useEffect(() => {
+class App extends React.Component {
+
+    constructor() {
+        super();
+        this.state = {
+            robots: [],
+        }
+    }
+
+    render() {
+
+        const {searchField, onSearchChange} = this.props;
+
+        const filteredRobots = this.state.robots.filter(robot => robot.name.toLowerCase().includes(searchField.toLowerCase()));
+        
+        if (filteredRobots.length === 0) {
+            return <h1>LOADING</h1>
+        } else {
+            return (
+                <div className="tc">
+                    <h1 className="f1">RoboFriends</h1>
+                    <SearchBox searchChange={onSearchChange} />
+                    <Scroll>
+                        <ErrorBoundary>
+                            <CardList robots={filteredRobots} />
+                        </ErrorBoundary>
+                    </Scroll>
+                </div>
+            )
+        }
+    }
+
+    componentDidMount() {
         fetch('https://jsonplaceholder.typicode.com/users')
             .then(response => response.json())
-            .then(users => setRobots(users));
-    }, []);
-
-    const onSearchChange = (event) => {
-        setSearchField(event.target.value);
+            .then(users => this.setState({ robots: users }));
     }
-
-    const filteredRobots = robots.filter(robot => robot.name.toLowerCase().includes(searchField.toLowerCase()));
-
-    if (filteredRobots.length === 0) {
-        return <h1>LOADING</h1>
-    } else {
-        return (
-            <div className="tc">
-                <h1 className="f1">RoboFriends</h1>
-                <SearchBox searchChange={onSearchChange} />
-                <Scroll>
-                    <ErrorBoundary>
-                        <CardList robots={filteredRobots} />
-                    </ErrorBoundary>
-                </Scroll>
-            </div>
-        )
-    }
-
-
-    // componentDidMount() {
-    //     fetch('https://jsonplaceholder.typicode.com/users')
-    //         .then(response => response.json())
-    //         .then(users => this.setState({ robots: users }));
-    // }
-    
 }
 
-export default App;
+// Using React Hooks
+// const App = () => {
+
+//     const [robots, setRobots] = useState([]);
+//     const [searchField, setSearchField] = useState('');
+
+//     useEffect(() => {
+//         fetch('https://jsonplaceholder.typicode.com/users')
+//             .then(response => response.json())
+//             .then(users => setRobots(users));
+//     }, []);
+
+//     const onSearchChange = (event) => {
+//         setSearchField(event.target.value);
+//     }
+
+//     const filteredRobots = robots.filter(robot => robot.name.toLowerCase().includes(searchField.toLowerCase()));
+
+//     if (filteredRobots.length === 0) {
+//         return <h1>LOADING</h1>
+//     } else {
+//         return (
+//             <div className="tc">
+//                 <h1 className="f1">RoboFriends</h1>
+//                 <SearchBox searchChange={onSearchChange} />
+//                 <Scroll>
+//                     <ErrorBoundary>
+//                         <CardList robots={filteredRobots} />
+//                     </ErrorBoundary>
+//                 </Scroll>
+//             </div>
+//         )
+//     }
+// }
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
