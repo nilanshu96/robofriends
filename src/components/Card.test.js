@@ -2,10 +2,10 @@ import { render } from "@testing-library/react";
 import Card from "./Card";
 
 test("loads a single card", () => {
-    const { getAllByRole } = render(
+    const { getAllByTestId } = render(
         <Card id="1" name="Mr 1" email="baroqueworks@gmail.com" />
     );
-    const cards = getAllByRole("robocard");
+    const cards = getAllByTestId("robocard");
     expect(cards.length).toEqual(1);
 });
 

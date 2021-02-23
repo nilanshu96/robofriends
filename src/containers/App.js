@@ -1,11 +1,5 @@
-import React from 'react';
-import CardList from '../components/CardList';
-import SearchBox from '../components/SearchBox';
-import Scroll from '../components/Scroll';
-import Header from '../components/Header';
-import ErrorBoundary from '../components/ErrorBoundary';
 import { connect } from 'react-redux';
-import './App.css';
+import MainPage from '../components/MainPage';
 
 import { setSearchField, getRobots } from '../actions';
 
@@ -25,37 +19,8 @@ const mapDispatchToProps = dispatch => ({
     getRobots: () => dispatch(getRobots())
 })
 
-class App extends React.Component {
-
-    render() {
-
-        const { robots, error, isPending, searchField, onSearchChange } = this.props;
-
-        const filteredRobots = robots.filter(robot => robot.name.toLowerCase().includes(searchField.toLowerCase()));
-
-        if (isPending) {
-            return <h1>LOADING</h1>
-        } else if (error) {
-            return <h1>Failed to fetch the Robots</h1>
-        }
-        else {
-            return (
-                <div className="tc">
-                    <Header />
-                    <SearchBox searchChange={onSearchChange} />
-                    <Scroll>
-                        <ErrorBoundary>
-                            <CardList robots={filteredRobots} />
-                        </ErrorBoundary>
-                    </Scroll>
-                </div>
-            )
-        }
-    }
-
-    componentDidMount() {
-        this.props.getRobots();
-    }
+function App(props) {
+    return <MainPage {...props} />
 }
 
 // Using React Hooks

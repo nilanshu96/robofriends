@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`renders correctly 1`] = `"<div><div role=\\"robocard\\" class=\\"tc bg-light-green dib br3 pa3 ma2 grow bw2 shadow-5\\"><img src=\\"https://robohash.org/1.png?size=200x200\\" alt=\\"robot\\"><div><h2>Leanne Graham</h2><p>Sincere@april.biz</p></div></div></div>"`;
