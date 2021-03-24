@@ -39,7 +39,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "prepare": "husky install",
-    "pretty-quick": "pretty-quick"
+    "format-staged": "pretty-quick --staged"
   },
   "eslintConfig": {
     "extends": [

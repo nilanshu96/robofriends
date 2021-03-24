@@ -10,9 +10,10 @@ import "./MainPage.css";
 class MainPage extends React.Component {
   render() {
     const {
-      robots,error,
+      robots,
+      error,
       isPending,
-searchField,
+      searchField,
       onSearchChange,
     } = this.props;
 
