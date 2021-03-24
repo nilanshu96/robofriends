@@ -11,7 +11,10 @@ class MainPage extends React.Component {
 
     render() {
 
-        const { robots, error, isPending, searchField, onSearchChange } = this.props;
+            const { robots, error, isPending, 
+                searchField, onSearchChange 
+                 } = this.props;
+                 
 
         const filteredRobots = robots.filter(robot => robot.name.toLowerCase().includes(searchField.toLowerCase()));
 
